@@ -1,0 +1,45 @@
+CREATE TABLE `w_partida` (
+	`id_partida` BIGINT(20) NOT NULL AUTO_INCREMENT,
+	`nom_partida` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_spanish_ci',
+	`estado_partida` BIT(1) NOT NULL DEFAULT 'b\'1\'',
+	PRIMARY KEY (`id_partida`) USING BTREE
+)
+COLLATE='utf8mb4_spanish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=10
+;
+
+
+CREATE TABLE `w_proveedor` (
+	`id_prov` BIGINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`nombre` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`rfc` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`correo` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`calle` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`num` VARCHAR(20) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`col` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`cp` INT(11) NULL DEFAULT NULL,
+	`cd` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`edo` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`tel` VARCHAR(15) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`cel` VARCHAR(15) NULL DEFAULT NULL COLLATE 'utf8mb4_spanish_ci',
+	`status` BIT(1) NULL DEFAULT 'b\'1\'',
+	PRIMARY KEY (`id_prov`) USING BTREE
+)
+COLLATE='utf8mb4_spanish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=2
+;
+
+
+CREATE TABLE `w_subpartida` (
+	`id_subpartida` BIGINT(20) NOT NULL AUTO_INCREMENT,
+	`id_partida` BIGINT(20) NOT NULL,
+	`nom_subpartida` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_spanish_ci',
+	`estado_subpartida` BIT(1) NOT NULL DEFAULT 'b\'1\'',
+	PRIMARY KEY (`id_subpartida`) USING BTREE
+)
+COLLATE='utf8mb4_spanish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=11
+;
