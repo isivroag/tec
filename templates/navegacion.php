@@ -3,8 +3,13 @@
 
   <a href="inicio.php" class="brand-link">
 
+<<<<<<< HEAD
     <img src="img/logo.png" alt="Tecniem Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-bold">TECNIEM</span>
+=======
+    <img src="img/mundo.jpg" alt="Tecniem Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-bold">Tecniem</span>
+>>>>>>> aa76aa8128963d727996505a1ca7d2d2394c3e21
   </a>
 
   <!-- Sidebar -->
