@@ -26,7 +26,7 @@ include_once "templates/navegacion.php";
     <div class="container-fluid">
       <div class="card">
         <div class="card-header bg-gradient-primary">
-          <h3>GRUPO AQUAX: BIENVENIDO</h3>
+          <h3>TECNOLOGÍAS DE INFORMACIÓN EMPRESARIAL</h3>
         </div>
 
       </div>
