@@ -61,6 +61,7 @@ $message = "";
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Fin</th>
                                             <th>Descripción/Servicio</th>
+                                            <th>Costo</th>
                                             <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
@@ -75,7 +76,21 @@ $message = "";
                                                 <td><?php echo $registro['apertura_ti'] ?></td>
                                                 <td><?php echo $registro['clausura_ti'] ?></td>
                                                 <td><?php echo $registro['descripcion_ti'] ?></td>
-                                                <td><?php echo $registro['estado_ti'] ?></td>
+                                                <td class="text-right"><?php echo $registro['costo_ti'] ?></td>
+                                                <td><?php
+                                                    switch ($registro['estado_ti']) {
+                                                        case 0:
+                                                            echo "<span class='bg-danger'> Cancelado </span>";
+                                                            break;
+
+                                                        case 1:
+                                                            echo "<span class='bg-success'> Abierto </span>";
+                                                            break;
+                                                        case 2:
+                                                            echo "<span class='bg-primary'> Cerrado </span>";
+                                                            break;
+                                                    }
+                                                    ?></td>
                                                 <td></td>
                                             </tr>
                                         <?php
@@ -90,7 +105,7 @@ $message = "";
 
             </div>
             <!-- /.card-body -->
-            
+
             <!-- /.card-footer-->
         </div>
         <!-- /.card -->
@@ -114,21 +129,21 @@ $message = "";
                                 <div class="col-sm-3">
                                     <div class="form-group input-group-sm">
                                         <label for="folio" class="col-form-label">Folio:</label>
-                                        <input type="text" class="form-control" name="folio" id="folio" autocomplete="off" placeholder="Folio">
+                                        <input type="text" class="form-control" name="folio" id="folio" autocomplete="off" placeholder="Folio" disabled>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group input-group-sm">
                                         <label for="inicio" class="col-form-label">Inicio:</label>
-                                        <input type="text" class="form-control" name="inicio" id="inicio" autocomplete="off" placeholder="Inicio">
+                                        <input type="text" class="form-control" name="inicio" id="inicio" autocomplete="off" placeholder="Inicio" disabled>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-3">
                                     <div class="form-group input-group-sm">
                                         <label for="fin" class="col-form-label">Fin:</label>
-                                        <input type="text" class="form-control" name="fin" id="fin" autocomplete="off" placeholder="Fin">
+                                        <input type="text" class="form-control" name="fin" id="fin" autocomplete="off" placeholder="Fin" disabled>
                                     </div>
                                 </div>
 
@@ -149,16 +164,27 @@ $message = "";
                                 <div class="col-sm-12">
                                     <div class="form-group input-group-sm">
                                         <label for="descripcion" class="col-form-label">Descripción:</label>
-                                        <input type="text" class="form-control" name="descripcion" id="descripcion" autocomplete="off" placeholder="Descripción del Servicio">
+                                        
+                                        <textarea rows="3" class="form-control" name="descripcion" id="descripcion" placeholder="Descripción del Servicio"></textarea>
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="offset-sm-9 col-sm-3">
                                     <div class="form-group input-group-sm">
                                         <label for="costo" class="col-form-label">Costo:</label>
-                                        <input type="text" class="form-control" name="costo" id="costo" autocomplete="off" placeholder="Costo">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-dollar-sign"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control text-right" name="costo" id="costo" autocomplete="off" placeholder="Costo">
+                                        </div>
+
+
+
                                     </div>
                                 </div>
 

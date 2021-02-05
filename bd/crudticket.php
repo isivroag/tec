@@ -19,30 +19,20 @@ $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
     case 1: //alta
-        $consulta = "INSERT INTO ticket (cliente_ti,apertura_ti,clausura_ti,usuario_ti,descripcion_ti,costo_ti) VALUES('$cliente','$inicio','$fin','$usuario','$descripcion','$costo') ";			
+        $consulta = "INSERT INTO ticket (cliente_ti,apertura_ti,clausura_ti,usuario_ti,descripcion_ti,costo_ti) VALUES('$cliente','$inicio','$fin','$usuario','$descripcion','$costo')";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
 
-        $consulta = "SELECT * FROM ticket ORDER BY folio_ticket DESC LIMIT 1";
+        $consulta = "SELECT * FROM ticket ORDER BY folio_ti DESC LIMIT 1";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 2: //modificación
-        $consulta = "UPDATE w_partida SET nom_partida='$nombre' WHERE id_partida='$id' ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
         
-        $consulta = "SELECT id_partida,nom_partida FROM w_partida WHERE id_partida='$id' ";       
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;        
     case 3://baja
-        $consulta = "DELETE FROM w_partida WHERE id_partida='$id' ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(); 
-        $data=1;                          
+                            
         break;        
 }
 

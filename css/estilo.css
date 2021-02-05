@@ -21,6 +21,11 @@
     color: white;
 }
 
+.bg-tec {
+    color: white !important;
+    background-color: #032b5c !important;
+}
+
 .active {
     color: white;
     background-color: rgb(9, 30, 124) !important;
