@@ -12,7 +12,7 @@ include_once 'bd/conexion.php';
 $objeto = new conn();
 $conexion = $objeto->connect();
 
-$consulta = "SELECT * FROM ticket order by folio_ti";
+$consulta = "SELECT * FROM ticket WHERE estado_ti<>0 ORDER BY folio_ti";
 $resultado = $conexion->prepare($consulta);
 $resultado->execute();
 $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -25,6 +25,7 @@ $message = "";
 
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="css/estilo.css">
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -36,15 +37,22 @@ $message = "";
 
         <!-- Default box -->
         <div class="card">
+
+        <div id="div_carga">
+
+        <img id="cargador" src="img/loader.gif" />
+        <span class=" " id="textoc"><strong>Cargando...</strong></span>
+
+      </div>
             <div class="card-header bg-blue text-light">
-                <h1 class="card-title mx-auto">Consulta de Tickets de Servicio</h1>
+                <h1 class="card-title mx-auto">Tickets de Servicio</h1>
             </div>
 
             <div class="card-body">
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <button id="btnNuevo" type="button" class="btn bg-blue btn-ms" data-toggle="modal"><i class="fas fa-plus-square text-light"></i><span class="text-light"> Nuevo</span></button>
+                        <button id="btnNuevo" type="button" class="btn bg-blue btn-ms" data-toggle="modal" style="border-radius: 60px;"><i class="fas fa-plus-square text-light"></i><span class="text-light"> Nuevo</span></button>
                     </div>
                 </div>
                 <br>
@@ -77,17 +85,20 @@ $message = "";
                                                 <td><?php echo $registro['clausura_ti'] ?></td>
                                                 <td><?php echo $registro['descripcion_ti'] ?></td>
                                                 <td class="text-right"><?php echo $registro['costo_ti'] ?></td>
-                                                <td><?php
+                                                <td class="text-center"><?php
                                                     switch ($registro['estado_ti']) {
                                                         case 0:
-                                                            echo "<span class='bg-danger'> Cancelado </span>";
+                                                            /*echo "<span class='bg-danger'> Cancelado </span>";*/
+                                                            echo "Cancelado";
                                                             break;
 
                                                         case 1:
-                                                            echo "<span class='bg-success'> Abierto </span>";
+                                                            /*echo "<span class='bg-success'> Abierto </span>";*/
+                                                            echo "Abierto";
                                                             break;
                                                         case 2:
-                                                            echo "<span class='bg-primary'> Cerrado </span>";
+                                                            /*echo "<span class='bg-primary'> Cerrado </span>";*/
+                                                            echo "Cerrado";
                                                             break;
                                                     }
                                                     ?></td>
@@ -208,6 +219,7 @@ $message = "";
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fas fa-ban"></i> Cancelar</button>
                         <button type="submit" id="btnGuardar" name="btnGuardar" class="btn btn-success" value="btnGuardar"><i class="far fa-save"></i> Guardar</button>
+                        
                     </div>
                     </form>
                 </div>
