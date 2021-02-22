@@ -103,7 +103,7 @@ $message = "";
 
       </div>
       <!-- /.card-body -->
-     
+
       <!-- /.card-footer-->
     </div>
     <!-- /.card -->
@@ -122,7 +122,7 @@ $message = "";
           <div class="card card-widget" style="margin: 10px;">
             <form id="formDatos" action="" method="POST">
               <div class="modal-body row">
-              <div class="col-sm-5">
+                <div class="col-sm-5">
                   <div class="form-group input-group-sm">
                     <label for="rfc" class="col-form-label">RFC:</label>
                     <input type="text" class="form-control" name="rfc" id="rfc" autocomplete="off" placeholder="RFC">

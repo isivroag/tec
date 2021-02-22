@@ -43,6 +43,8 @@ $(document).ready(function() {
         rowCallback: function(row, data) {
             $($(row).find("td")[6]).css("color", "white");
             $($(row).find("td")[6]).addClass("text-center")
+            $($(row).find("td")[5]).addClass("text-right")
+
             if (data[6] == "Abierto") {
                 $($(row).find("td")[6]).css("background-color", "green");
             } else if (data[6] == "Cerrado") {

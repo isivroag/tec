@@ -47,7 +47,7 @@ switch($opcion){
         $data=1;                 
         break;    
     case 4:
-        $consulta = "UPDATE ticket SET estado_ti='2' WHERE folio_ti='$folio'";
+        $consulta = "UPDATE ticket SET estado_ti='2',clausura_ti='$fechacan' WHERE folio_ti='$folio'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
 
