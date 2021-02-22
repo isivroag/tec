@@ -26,6 +26,11 @@ $message = "";
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="css/estilo.css">
+<style>
+.borderless td, .borderless th {
+    border: none;
+}
+</style>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -52,7 +57,7 @@ $message = "";
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <button id="btnNuevo" type="button" class="btn bg-blue btn-ms" data-toggle="modal" style="border-radius: 60px;"><i class="fas fa-plus-square text-light"></i><span class="text-light"> Nuevo</span></button>
+                        <button id="btnNuevo" type="button" class="btn bg-blue btn-ms" data-toggle="modal"><i class="fas fa-plus-square text-light"></i><span class="text-light"> Nuevo</span></button>
                     </div>
                 </div>
                 <br>
@@ -61,7 +66,7 @@ $message = "";
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="table-responsive">
-                                <table name="tablaV" id="tablaV" class="table table-sm table-striped table-bordered table-condensed text-nowrap w-auto mx-auto" style="width:100%">
+                                <table name="tablaV" id="tablaV" class="table table-sm table-condensed text-nowrap w-auto mx-auto borderless"  style="width:100%">
                                     <thead class="text-center bg-blue">
                                         <tr>
                                             <th>Folio</th>
@@ -75,38 +80,8 @@ $message = "";
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        foreach ($data as $registro) {
-                                        ?>
-                                            <tr>
-                                                <td><?php echo $registro['folio_ti'] ?></td>
-                                                <td><?php echo $registro['cliente_ti'] ?></td>
-                                                <td><?php echo $registro['apertura_ti'] ?></td>
-                                                <td><?php echo $registro['clausura_ti'] ?></td>
-                                                <td><?php echo $registro['descripcion_ti'] ?></td>
-                                                <td class="text-right"><?php echo $registro['costo_ti'] ?></td>
-                                                <td class="text-center"><?php
-                                                    switch ($registro['estado_ti']) {
-                                                        case 0:
-                                                            /*echo "<span class='bg-danger'> Cancelado </span>";*/
-                                                            echo "Cancelado";
-                                                            break;
-
-                                                        case 1:
-                                                            /*echo "<span class='bg-success'> Abierto </span>";*/
-                                                            echo "Abierto";
-                                                            break;
-                                                        case 2:
-                                                            /*echo "<span class='bg-primary'> Cerrado </span>";*/
-                                                            echo "Cerrado";
-                                                            break;
-                                                    }
-                                                    ?></td>
-                                                <td></td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
+                                    
+                                     
                                     </tbody>
                                 </table>
                             </div>

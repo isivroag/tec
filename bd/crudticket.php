@@ -56,6 +56,12 @@ switch($opcion){
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
     break;
+    case 5:
+        $consulta = "SELECT * FROM ticket WHERE estado_ti<>0 ORDER BY folio_ti";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+    break;
 
 }
 

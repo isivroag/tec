@@ -1,27 +1,38 @@
-$(document).ready(function() {
+$(document).ready(function () {
     jQuery.ajaxSetup({
-        beforeSend: function() {
+        beforeSend: function () {
             $("#div_carga").show();
         },
-        complete: function() {
+        complete: function () {
             $("#div_carga").hide();
         },
-        success: function() {},
+        success: function () { },
     });
 
     var id, opcion;
-    opcion = 4;
+    opcion = 5;
 
     tablaVis = $("#tablaV").DataTable({
         info: false,
-
-        columnDefs: [{
-                targets: -1,
-                data: null,
-                defaultContent: "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-success btnCerrar' data-toggle='tooltip' data-placement='top' title='Cerrar'><i class=' text-light fas fa-check-circle'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-ban'></i></button></div>",
-            },
-            /*{ className: "hide_column", targets: [5] },*/
+        "ajax": {
+            "url": "bd/crudticket.php",
+            "method": "POST",
+            "data": { opcion: 5 },
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "folio_ti" },
+            { "data": "cliente_ti" },
+            { "data": "apertura_ti" },
+            { "data": "clausura_ti" },
+            { "data": "descripcion_ti" },
+            { "data": "costo_ti" },
+            { "data": "estado_ti" },
+            { "defaultContent": "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-success btnCerrar' data-toggle='tooltip' data-placement='top' title='Cerrar'><i class=' text-light fas fa-check-circle'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-ban'></i></button></div>" }
         ],
+
+        /*{ className: "hide_column", targets: [5] },*/
+
 
         //Para cambiar el lenguaje a español
         language: {
@@ -40,23 +51,29 @@ $(document).ready(function() {
             sProcessing: "Procesando...",
         },
 
-        rowCallback: function(row, data) {
-            $($(row).find("td")[6]).css("color", "white");
-            $($(row).find("td")[6]).addClass("text-center")
-            $($(row).find("td")[5]).addClass("text-right")
-
-            if (data[6] == "Abierto") {
+        rowCallback: function (row, data) {
+            $($(row).find("td")["6"]).css("color", "white");
+            $($(row).find("td")["6"]).addClass("text-center");
+            $($(row).find("td")["5"]).addClass("text-right");
+            
+            if (data["estado_ti"] == 1) {
                 $($(row).find("td")[6]).css("background-color", "green");
-            } else if (data[6] == "Cerrado") {
+                $($(row).find("td")[6]).addClass("bg-gradient-success");
+                $($(row).find("td")["6"]).text("ABIERTO");
+            } else if (data["estado_ti"] == 2) {
                 $($(row).find("td")[6]).css("background-color", "blue");
+                $($(row).find("td")[6]).addClass("bg-gradient-primary");
+                $($(row).find("td")["6"]).text("CERRADO");
             } else {
                 $($(row).find("td")[6]).css("background-color", "red");
+                $($(row).find("td")[6]).addClass("bg-gradient-danger");
+                $($(row).find("td")["6"]).text("CANCELADO");
             }
         },
     });
     $('[data-toggle="tooltip"]').tooltip();
 
-    $("#btnNuevo").click(function() {
+    $("#btnNuevo").click(function () {
         //window.location.href = "prospecto.php";
         $("#formDatos").trigger("reset");
         opcion = 1;
@@ -86,7 +103,7 @@ $(document).ready(function() {
     var fila; //capturar la fila para editar o borrar el registro
 
     //botón EDITAR
-    $(document).on("click", ".btnEditar", function() {
+    $(document).on("click", ".btnEditar", function () {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
         id = folio;
@@ -144,7 +161,7 @@ $(document).ready(function() {
     });
 
     //botón BORRAR
-    $(document).on("click", ".btnBorrar", function() {
+    $(document).on("click", ".btnBorrar", function () {
         fila = $(this);
 
         folio = parseInt($(this).closest("tr").find("td:eq(0)").text());
@@ -163,7 +180,7 @@ $(document).ready(function() {
                 confirmButtonColor: "#28B463",
                 cancelButtonColor: "#d33",
             })
-            .then(function(isConfirm) {
+            .then(function (isConfirm) {
                 if (isConfirm.value) {
                     $.ajax({
                         url: "bd/crudticket.php",
@@ -171,14 +188,15 @@ $(document).ready(function() {
                         dataType: "json",
                         data: { folio: folio, opcion: opcion, usuario: usuario },
 
-                        success: function(data) {
-                            tablaVis.row(fila.parents("tr")).remove().draw();
+                        success: function (data) {
+                            tablaVis.ajax.reload(null, false);
+                            //tablaVis.row(fila.parents("tr")).remove().draw();
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
             });
     });
-    $(document).on("click", ".btnCerrar", function() {
+    $(document).on("click", ".btnCerrar", function () {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
 
@@ -186,17 +204,17 @@ $(document).ready(function() {
 
         opcion = 4;
         swal.fire({
-                title: "Cerrar Ticket",
-                text: "¿Desea cerrar el ticket seleccionado?",
-                showCancelButton: true,
-                icon: "question",
-                focusConfirm: true,
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#28B463",
-                cancelButtonColor: "#d33",
-            })
-            .then(function(isConfirm) {
+            title: "Cerrar Ticket",
+            text: "¿Desea cerrar el ticket seleccionado?",
+            showCancelButton: true,
+            icon: "question",
+            focusConfirm: true,
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#28B463",
+            cancelButtonColor: "#d33",
+        })
+            .then(function (isConfirm) {
                 if (isConfirm.value) {
 
                     $.ajax({
@@ -207,7 +225,7 @@ $(document).ready(function() {
                             folio: folio,
                             opcion: opcion,
                         },
-                        success: function(data) {
+                        success: function (data) {
                             tfolio = data[0].folio_ti;
                             tcliente = data[0].cliente_ti;
                             tinicio = data[0].apertura_ti;
@@ -222,11 +240,12 @@ $(document).ready(function() {
                             } else {
                                 testado = "Cancelado";
                             }
-                            tablaVis.row(fila).data([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                            //tablaVis.row(fila).data([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                            tablaVis.ajax.reload(null, false);
 
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
             });
     });
 
@@ -331,7 +350,7 @@ $(document).ready(function() {
                 });
         });*/
 
-    $("#formDatos").submit(function(e) {
+    $("#formDatos").submit(function (e) {
         e.preventDefault();
 
         var inicio = $("#inicio").val();
@@ -365,7 +384,7 @@ $(document).ready(function() {
                     estado: estado,
                     opcion: opcion,
                 },
-                success: function(data) {
+                success: function (data) {
 
                     console.log(data);
                     tfolio = data[0].folio_ti;
@@ -384,9 +403,13 @@ $(document).ready(function() {
                     }
 
                     if (opcion == 1) {
-                        tablaVis.row.add([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                        // tablaVis.row.add([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                        tablaVis.ajax.reload(null, false);
+
                     } else {
-                        tablaVis.row(fila).data([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                        //                        tablaVis.row(fila).data([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
+                        tablaVis.ajax.reload(null, false);
+
                     }
                 },
             });
