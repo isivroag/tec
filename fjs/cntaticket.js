@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    jQuery.ajaxSetup({
+$(document).ready(function () {
+    /*jQuery.ajaxSetup({
         beforeSend: function() {
             $("#div_carga").show();
         },
@@ -7,19 +7,24 @@ $(document).ready(function() {
             $("#div_carga").hide();
         },
         success: function() {},
-    });
+    });*/
 
     var id, opcion;
     opcion = 5;
 
+
+
     tablaVis = $("#tablaV").DataTable({
         info: false,
         "ajax": {
-            "url": "bd/crudticket.php",
-            "method": "POST",
-            "data": { opcion: 5 },
-            "dataSrc": ""
+            "type": "POST",
+            "url": "bd/datosticket.php",
+            "dataType": "json",
+            "dataSrc": "",
+
         },
+
+
         "columns": [
             { "data": "folio_ti" },
             { "data": "cliente_ti" },
@@ -28,7 +33,7 @@ $(document).ready(function() {
             { "data": "descripcion_ti" },
             { "data": "costo_ti" },
             { "data": "estado_ti" },
-            { "defaultContent": "<div class='text-center'><button class='btn btn-sm bg-purple  btnTarea' data-toggle='tooltip' data-placement='top' title='Alta de Tareas'><i class='fas fa-list-ol'></i></button><button class='btn btn-sm bg-orange btnVerTareas' data-toggle='tooltip' data-placement='top' title='Ver Tareas'><i class='text-light fas fa-edit'></i></button></button></div>" },
+            { "defaultContent": "<div class='text-center'><button class='btn btn-sm bg-purple  btnTarea' data-toggle='tooltip' data-placement='top' title='Alta de Tareas'><i class='fas fa-list-ol'></i></button><button class='btn btn-sm bg-orange btnVerTareas' data-toggle='tooltip' data-placement='top' title='Ver Tareas'><i class='text-light fas fa-search'></i></button></button></div>" },
             { "defaultContent": "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-success btnCerrar' data-toggle='tooltip' data-placement='top' title='Cerrar'><i class=' text-light fas fa-check-circle'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-ban'></i></button></div>" }
         ],
 
@@ -52,7 +57,7 @@ $(document).ready(function() {
             sProcessing: "Procesando...",
         },
 
-        rowCallback: function(row, data) {
+        rowCallback: function (row, data) {
             $($(row).find("td")["6"]).css("color", "white");
             $($(row).find("td")["6"]).addClass("text-center");
             $($(row).find("td")["5"]).addClass("text-right");
@@ -101,7 +106,7 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $(document).on("click", ".btnVerTareas", function() {
+    $(document).on("click", ".btnVerTareas", function () {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
         tablaT.clear();
@@ -115,10 +120,10 @@ $(document).ready(function() {
                 folio: folio,
                 opcion: opcion
             },
-            success: function(res) {
+            success: function (res) {
                 if (res.length > 0) {
                     for (var i = 0; i < res.length; i++) {
-                        tablaT.row.add([res[i].folio_ta, res[i].fecha_ta, res[i].nombre_ta, res[i].desc_ta, ]).draw();
+                        tablaT.row.add([res[i].folio_ta, res[i].fecha_ta, res[i].nombre_ta, res[i].desc_ta,]).draw();
 
                         $("#modalVerTar").modal("show");
 
@@ -139,9 +144,17 @@ $(document).ready(function() {
 
     });
 
+    //FUNCION ACTUALIZAR CADA 5 SEG
+    // setInterval(function(){ tablaVis.ajax.reload(null, false); }, 5000);
 
 
-    $("#btnNuevo").click(function() {
+
+    //FUNCION PUSH
+    /*  function mensaje(){
+    Push.create("Hola Mundo");
+}*/
+
+    $("#btnNuevo").click(function () {
         //window.location.href = "prospecto.php";
         $("#formDatos").trigger("reset");
         opcion = 1;
@@ -169,7 +182,7 @@ $(document).ready(function() {
     });
 
     var fila; //capturar la fila para editar o borrar el registro
-    $(document).on("click", ".btnTarea", function() {
+    $(document).on("click", ".btnTarea", function () {
 
         $("#formTareas").trigger("reset");
         fila = $(this).closest("tr");
@@ -182,7 +195,7 @@ $(document).ready(function() {
 
     });
 
-    $(document).on("click", "#btnGuardarTar", function() {
+    $(document).on("click", "#btnGuardarTar", function () {
 
 
         var tarea = $("#tarea").val();
@@ -207,7 +220,7 @@ $(document).ready(function() {
                     tareadesc: tareadesc,
                     opcion: opcion
                 },
-                success: function(data) {
+                success: function (data) {
 
                     if (data == 1) {
                         Swal.fire({
@@ -233,9 +246,10 @@ $(document).ready(function() {
     });
 
 
+    //mensaje();
 
     //botón EDITAR
-    $(document).on("click", ".btnEditar", function() {
+    $(document).on("click", ".btnEditar", function () {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
         id = folio;
@@ -293,11 +307,12 @@ $(document).ready(function() {
     });
 
     //botón BORRAR
-    $(document).on("click", ".btnBorrar", function() {
+    $(document).on("click", ".btnBorrar", function () {
         fila = $(this);
 
         folio = parseInt($(this).closest("tr").find("td:eq(0)").text());
         usuario = $("#nameuser").val();
+        fecha=actual();
         opcion = 3; //borrar
 
         swal
@@ -312,41 +327,71 @@ $(document).ready(function() {
                 confirmButtonColor: "#28B463",
                 cancelButtonColor: "#d33",
             })
-            .then(function(isConfirm) {
+            .then(function (isConfirm) {
                 if (isConfirm.value) {
                     $.ajax({
                         url: "bd/crudticket.php",
                         type: "POST",
                         dataType: "json",
-                        data: { folio: folio, opcion: opcion, usuario: usuario },
+                        data: { folio: folio, opcion: opcion, usuario: usuario,fecha:fecha },
 
-                        success: function(data) {
+                        success: function (data) {
                             tablaVis.ajax.reload(null, false);
                             //tablaVis.row(fila.parents("tr")).remove().draw();
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
             });
     });
-    $(document).on("click", ".btnCerrar", function() {
+
+    function actual(){
+       
+
+
+        let date_ob = new Date();
+
+        // adjust 0 before single digit date
+        let date = ("0" + date_ob.getDate()).slice(-2);
+
+        // current month
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+        // current year
+        let year = date_ob.getFullYear();
+
+        // current hours
+        let hours = date_ob.getHours();
+
+        // current minutes
+        let minutes = date_ob.getMinutes();
+
+        // current seconds
+        let seconds = date_ob.getSeconds();
+        fecha=year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+        return (fecha);
+        // prints date & time in YYYY-MM-DD HH:MM:SS format
+
+    }
+    $(document).on("click", ".btnCerrar", function () {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
+        fecha=actual();
 
         //window.location.href = "actprospecto.php?id=" + id;
 
         opcion = 4;
         swal.fire({
-                title: "Cerrar Ticket",
-                text: "¿Desea cerrar el ticket seleccionado?",
-                showCancelButton: true,
-                icon: "question",
-                focusConfirm: true,
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#28B463",
-                cancelButtonColor: "#d33",
-            })
-            .then(function(isConfirm) {
+            title: "Cerrar Ticket",
+            text: "¿Desea cerrar el ticket seleccionado?",
+            showCancelButton: true,
+            icon: "question",
+            focusConfirm: true,
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#28B463",
+            cancelButtonColor: "#d33",
+        })
+            .then(function (isConfirm) {
                 if (isConfirm.value) {
 
                     $.ajax({
@@ -356,28 +401,29 @@ $(document).ready(function() {
                         data: {
                             folio: folio,
                             opcion: opcion,
+                            fecha:fecha
                         },
-                        success: function(data) {
-                            tfolio = data[0].folio_ti;
-                            tcliente = data[0].cliente_ti;
-                            tinicio = data[0].apertura_ti;
-                            tfin = data[0].clausura_ti;
-                            tdescripcion = data[0].descripcion_ti;
-                            tcosto = data[0].costo_ti;
-                            testado = data[0].estado_ti;
-                            if (testado == 1) {
-                                testado = "Abierto";
-                            } else if (testado == 2) {
-                                testado = "Cerrado";
-                            } else {
-                                testado = "Cancelado";
-                            }
+                        success: function (data) {
+                            /* tfolio = data[0].folio_ti;
+                             tcliente = data[0].cliente_ti;
+                             tinicio = data[0].apertura_ti;
+                             tfin = data[0].clausura_ti;
+                             tdescripcion = data[0].descripcion_ti;
+                             tcosto = data[0].costo_ti;
+                             testado = data[0].estado_ti;
+                             if (testado == 1) {
+                                 testado = "Abierto";
+                             } else if (testado == 2) {
+                                 testado = "Cerrado";
+                             } else {
+                                 testado = "Cancelado";
+                             }*/
                             //tablaVis.row(fila).data([tfolio, tcliente, tinicio, tfin, tdescripcion, tcosto, testado]).draw();
                             tablaVis.ajax.reload(null, false);
 
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
             });
     });
 
@@ -482,7 +528,7 @@ $(document).ready(function() {
                 });
         });*/
 
-    $("#formDatos").submit(function(e) {
+    $("#formDatos").submit(function (e) {
         e.preventDefault();
 
         var inicio = $("#inicio").val();
@@ -516,7 +562,7 @@ $(document).ready(function() {
                     estado: estado,
                     opcion: opcion,
                 },
-                success: function(data) {
+                success: function (data) {
 
                     console.log(data);
                     tfolio = data[0].folio_ti;

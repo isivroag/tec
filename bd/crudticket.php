@@ -15,6 +15,8 @@ $estado = (isset($_POST['estado'])) ? $_POST['estado'] : '';
 
 $folio = (isset($_POST['folio'])) ? $_POST['folio'] : '';
 
+$fecha = (isset($_POST['fecha'])) ? $_POST['fecha'] : '';
+
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 date_default_timezone_set('America/Mexico_City');
 $fechacan=date("Y-m-d H:i:s");
@@ -41,13 +43,13 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;        
     case 3://baja
-        $consulta = "UPDATE ticket SET estado_ti=0,fecha_can='$fechacan',usuario_can='$usuario' WHERE folio_ti='$folio'";
+        $consulta = "UPDATE ticket SET estado_ti=0,fecha_can='$fecha',usuario_can='$usuario' WHERE folio_ti='$folio'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
         $data=1;                 
         break;    
     case 4:
-        $consulta = "UPDATE ticket SET estado_ti='2',clausura_ti='$fechacan' WHERE folio_ti='$folio'";
+        $consulta = "UPDATE ticket SET estado_ti='2',clausura_ti='$fecha' WHERE folio_ti='$folio'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
 
@@ -57,7 +59,7 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
     break;
     case 5:
-        $consulta = "SELECT * FROM ticket WHERE estado_ti<>0 ORDER BY folio_ti";
+        $consulta = "SELECT folio_ti,cliente_ti,apertura_ti,clausura_ti,descripcion_ti,costo_ti,estado_ti FROM ticket WHERE estado_ti<>0 ORDER BY folio_ti";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

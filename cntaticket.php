@@ -306,3 +306,4 @@ $message = "";
 <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script src="plugins/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="plugins/push/push.js"></script>
