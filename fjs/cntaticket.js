@@ -1,12 +1,12 @@
-$(document).ready(function () {
+$(document).ready(function() {
     jQuery.ajaxSetup({
-        beforeSend: function () {
+        beforeSend: function() {
             $("#div_carga").show();
         },
-        complete: function () {
+        complete: function() {
             $("#div_carga").hide();
         },
-        success: function () { },
+        success: function() {},
     });
 
     var id, opcion;
@@ -28,6 +28,7 @@ $(document).ready(function () {
             { "data": "descripcion_ti" },
             { "data": "costo_ti" },
             { "data": "estado_ti" },
+            { "defaultContent": "<div class='text-center'><button class='btn btn-sm bg-purple  btnTarea' data-toggle='tooltip' data-placement='top' title='Alta de Tareas'><i class='fas fa-list-ol'></i></button><button class='btn btn-sm bg-orange btnVerTareas' data-toggle='tooltip' data-placement='top' title='Ver Tareas'><i class='text-light fas fa-edit'></i></button></button></div>" },
             { "defaultContent": "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-success btnCerrar' data-toggle='tooltip' data-placement='top' title='Cerrar'><i class=' text-light fas fa-check-circle'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-ban'></i></button></div>" }
         ],
 
@@ -51,11 +52,11 @@ $(document).ready(function () {
             sProcessing: "Procesando...",
         },
 
-        rowCallback: function (row, data) {
+        rowCallback: function(row, data) {
             $($(row).find("td")["6"]).css("color", "white");
             $($(row).find("td")["6"]).addClass("text-center");
             $($(row).find("td")["5"]).addClass("text-right");
-            
+
             if (data["estado_ti"] == 1) {
                 $($(row).find("td")[6]).css("background-color", "green");
                 $($(row).find("td")[6]).addClass("bg-gradient-success");
@@ -71,9 +72,76 @@ $(document).ready(function () {
             }
         },
     });
+
+    tablaT = $("#tablaT").DataTable({
+        info: false,
+        paging: false,
+        searching: false,
+
+
+
+        language: {
+            lengthMenu: "Mostrar _MENU_ registros",
+            zeroRecords: "No se encontraron resultados",
+            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            sSearch: "Buscar:",
+            oPaginate: {
+                sFirst: "Primero",
+                sLast: "Último",
+                sNext: "Siguiente",
+                sPrevious: "Anterior",
+            },
+            sProcessing: "Procesando...",
+        },
+
+
+    });
+
     $('[data-toggle="tooltip"]').tooltip();
 
-    $("#btnNuevo").click(function () {
+    $(document).on("click", ".btnVerTareas", function() {
+        fila = $(this).closest("tr");
+        folio = parseInt(fila.find("td:eq(0)").text());
+        tablaT.clear();
+        tablaT.draw();
+        opcion = 5;
+        $.ajax({
+            url: "bd/crudtarea.php",
+            type: "POST",
+            dataType: "json",
+            data: {
+                folio: folio,
+                opcion: opcion
+            },
+            success: function(res) {
+                if (res.length > 0) {
+                    for (var i = 0; i < res.length; i++) {
+                        tablaT.row.add([res[i].folio_ta, res[i].fecha_ta, res[i].nombre_ta, res[i].desc_ta, ]).draw();
+
+                        $("#modalVerTar").modal("show");
+
+                    }
+                } else {
+                    Swal.fire({
+                        title: "Sin Tareas",
+                        text: "El Ticket no tiene tareas registradas ",
+                        icon: "info",
+                    });
+                }
+
+
+            }
+        });
+
+
+
+    });
+
+
+
+    $("#btnNuevo").click(function() {
         //window.location.href = "prospecto.php";
         $("#formDatos").trigger("reset");
         opcion = 1;
@@ -101,9 +169,73 @@ $(document).ready(function () {
     });
 
     var fila; //capturar la fila para editar o borrar el registro
+    $(document).on("click", ".btnTarea", function() {
+
+        $("#formTareas").trigger("reset");
+        fila = $(this).closest("tr");
+        folio = parseInt(fila.find("td:eq(0)").text());
+        $("#folio_ti").val(folio);
+        opcion = 1;
+        $(".modal-header").css("background-color", "#28a745");
+        $(".modal-header").css("color", "white");
+        $("#modalTarea").modal("show");
+
+    });
+
+    $(document).on("click", "#btnGuardarTar", function() {
+
+
+        var tarea = $("#tarea").val();
+        var tareadesc = $("#tareadesc").val();
+        var folio = $("#folio_ti").val();
+
+        if (tarea.length == 0) {
+            Swal.fire({
+                title: "Datos Faltantes",
+                text: "Debe ingresar el nombre de la Tarea",
+                icon: "warning",
+            });
+            return false;
+        } else {
+            $.ajax({
+                url: "bd/crudtarea.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    folio: folio,
+                    tarea: tarea,
+                    tareadesc: tareadesc,
+                    opcion: opcion
+                },
+                success: function(data) {
+
+                    if (data == 1) {
+                        Swal.fire({
+                            title: "Operacion Exitosa",
+                            text: "Tarea asignada ",
+                            icon: "success",
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "La tarea no pudo ser registrada ",
+                            icon: "warning",
+                        });
+                    }
+                }
+
+            });
+            $("#modalTarea").modal("hide");
+        }
+
+
+
+    });
+
+
 
     //botón EDITAR
-    $(document).on("click", ".btnEditar", function () {
+    $(document).on("click", ".btnEditar", function() {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
         id = folio;
@@ -161,7 +293,7 @@ $(document).ready(function () {
     });
 
     //botón BORRAR
-    $(document).on("click", ".btnBorrar", function () {
+    $(document).on("click", ".btnBorrar", function() {
         fila = $(this);
 
         folio = parseInt($(this).closest("tr").find("td:eq(0)").text());
@@ -180,7 +312,7 @@ $(document).ready(function () {
                 confirmButtonColor: "#28B463",
                 cancelButtonColor: "#d33",
             })
-            .then(function (isConfirm) {
+            .then(function(isConfirm) {
                 if (isConfirm.value) {
                     $.ajax({
                         url: "bd/crudticket.php",
@@ -188,15 +320,15 @@ $(document).ready(function () {
                         dataType: "json",
                         data: { folio: folio, opcion: opcion, usuario: usuario },
 
-                        success: function (data) {
+                        success: function(data) {
                             tablaVis.ajax.reload(null, false);
                             //tablaVis.row(fila.parents("tr")).remove().draw();
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
             });
     });
-    $(document).on("click", ".btnCerrar", function () {
+    $(document).on("click", ".btnCerrar", function() {
         fila = $(this).closest("tr");
         folio = parseInt(fila.find("td:eq(0)").text());
 
@@ -204,17 +336,17 @@ $(document).ready(function () {
 
         opcion = 4;
         swal.fire({
-            title: "Cerrar Ticket",
-            text: "¿Desea cerrar el ticket seleccionado?",
-            showCancelButton: true,
-            icon: "question",
-            focusConfirm: true,
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar",
-            confirmButtonColor: "#28B463",
-            cancelButtonColor: "#d33",
-        })
-            .then(function (isConfirm) {
+                title: "Cerrar Ticket",
+                text: "¿Desea cerrar el ticket seleccionado?",
+                showCancelButton: true,
+                icon: "question",
+                focusConfirm: true,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#28B463",
+                cancelButtonColor: "#d33",
+            })
+            .then(function(isConfirm) {
                 if (isConfirm.value) {
 
                     $.ajax({
@@ -225,7 +357,7 @@ $(document).ready(function () {
                             folio: folio,
                             opcion: opcion,
                         },
-                        success: function (data) {
+                        success: function(data) {
                             tfolio = data[0].folio_ti;
                             tcliente = data[0].cliente_ti;
                             tinicio = data[0].apertura_ti;
@@ -245,7 +377,7 @@ $(document).ready(function () {
 
                         },
                     });
-                } else if (isConfirm.dismiss === swal.DismissReason.cancel) { }
+                } else if (isConfirm.dismiss === swal.DismissReason.cancel) {}
             });
     });
 
@@ -350,7 +482,7 @@ $(document).ready(function () {
                 });
         });*/
 
-    $("#formDatos").submit(function (e) {
+    $("#formDatos").submit(function(e) {
         e.preventDefault();
 
         var inicio = $("#inicio").val();
@@ -384,7 +516,7 @@ $(document).ready(function () {
                     estado: estado,
                     opcion: opcion,
                 },
-                success: function (data) {
+                success: function(data) {
 
                     console.log(data);
                     tfolio = data[0].folio_ti;

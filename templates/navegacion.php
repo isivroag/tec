@@ -39,7 +39,7 @@
 
 
           <a href="#" class="nav-link  <?php echo ($pagina == 'ticket' ) ? "active" : ""; ?>">
-            <i class="nav-icon fas fa-award nav-icon"></i>
+            <i class="nav-icon fas fa-tasks nav-icon"></i>
             <p>
               Operaciones
               <i class="right fas fa-angle-left"></i>
@@ -50,7 +50,7 @@
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="cntaticket.php" class="nav-link <?php echo ($pagina == 'ticket') ? "active seleccionado" : ""; ?>  ">
-                <i class="fas fa-swimming-pool nav-icon"></i>
+                <i class="fas fa-ticket-alt nav-icon"></i>
                 <p>Tickets</p>
               </a>
             </li>
