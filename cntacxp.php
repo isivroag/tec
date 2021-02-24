@@ -12,7 +12,7 @@ include_once 'bd/conexion.php';
 $objeto = new conn();
 $conexion = $objeto->connect();
 
-$consulta = "SELECT * FROM w_vcxp  where estado_cxp ='1' order by folio_cxp";
+$consulta = "SELECT * FROM w_vcxp where estado_cxp ='1' order by folio_cxp";
 $resultado = $conexion->prepare($consulta);
 $resultado->execute();
 $data = $resultado->fetchAll(PDO::FETCH_ASSOC);

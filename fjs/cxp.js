@@ -240,9 +240,9 @@ $(document).ready(function() {
                             icon: 'success',
                         })
 
-                        /*window.setTimeout(function() {
+                        window.setTimeout(function() {
                             window.location.href = "cntacxp.php";
-                        }, 1500);*/
+                        }, 1500);
 
                     }
                 }
