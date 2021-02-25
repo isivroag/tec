@@ -26,6 +26,11 @@ $resultadog = $conexion->prepare($consultag);
 $resultadog->execute();
 $datag = $resultadog->fetchAll(PDO::FETCH_ASSOC);
 
+$consultac = "SELECT  * FROM w_cuenta WHERE estado_cuenta=1 ORDER BY id_cuenta";
+$resultadoc = $conexion->prepare($consultac);
+$resultadoc->execute();
+$datac = $resultadoc->fetchAll(PDO::FETCH_ASSOC);
+
 
 $message = "";
 
@@ -42,7 +47,7 @@ $message = "";
 
 
   <!-- Main content -->
-  <section class="content">
+  <section>
 
     <!-- Default box -->
     <div class="card ">
@@ -169,6 +174,121 @@ $message = "";
 
   </section>
 
+  <section>
+    <div class="modal fade " id="modalPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-blue">
+            <h5 class="modal-title" id="exampleModalLabel">Pagar Cuenta</h5>
+
+          </div>
+          <div class="card card-widget" style="margin: 10px;">
+            <form id="formPago" action="" method="POST">
+              <div class="modal-body row">
+
+                <div class="col-sm-4">
+                  <div class="form-group input-group-sm">
+                    <label for="fecha" class="col-form-label">Fecha de Pago:</label>
+                    <input type="hidden" class="form-control" name="folio_cxp" id="folio_cxp" autocomplete="off" placeholder="folio_cxp">
+                    <input type="date" class="form-control" name="fecha" id="fecha" autocomplete="off" placeholder="Fecha" value="<?php echo date("Y-m-d") ?>">
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group input-group-sm auto">
+                    <label for="cuenta" class="col-form-label">Cuenta:</label>
+                    <select class="form-control" name="cuenta" id="cuenta">
+                      <?php
+                      foreach ($datac as $regc) {
+                      ?>
+                        <option id="<?php echo $regc['id_cuenta'] ?>" value="<?php echo $regc['id_cuenta'] ?>"><?php echo $regc['nom_cuenta'] ?> </option>
+                      <?php
+                      }
+                      ?>
+
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group input-group-sm auto">
+                    <label for="metodo" class="col-form-label">Metodo de Pago:</label>
+                    <select class="form-control" name="metodo" id="metodo">
+
+
+                      <option id="Efectivo" value="Efectivo">Efectivo</option>
+                      <option id="Transferencia" value="Transferencia">Transferencia</option>
+                      <option id="Deposito" value="Deposito">Deposito</option>
+                      <option id="Cheque" value="Cheque">Cheque</option>
+                      <option id="Tarjeta de Crédito" value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                      <option id="Tarjeta de Debito" value="Tarjeta de Debito">Tarjeta de Debito</option>
+
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="form-group input-group-sm">
+                    <label for="notapago" class="col-form-label">Nota:</label>
+                    <input type="text" class="form-control" name="notapago" id="notapago" autocomplete="off" placeholder="Nota">
+                  </div>
+                </div>
+               
+
+                  <div class="col-lg-4 ">
+                    <label for="saldovp" class="col-form-label ">Saldo:</label>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fas fa-dollar-sign"></i>
+                        </span>
+                      </div>
+                      <input type="text" class="form-control text-right" name="saldo" id="saldo" value="" disabled>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 offset-4">
+                    <label for="montopago" class="col-form-label">Pago:</label>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fas fa-dollar-sign"></i>
+                        </span>
+
+                      </div>
+                      <input type="text" id="montopago" name="montopago" class="form-control text-right" autocomplete="off" placeholder="Monto del Pago">
+                    </div>
+                  </div>
+
+                
+
+
+
+              </div>
+              <?php
+              if ($message != "") {
+              ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <span class="badge "><?php echo ($message); ?></span>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+
+                </div>
+
+              <?php
+              }
+              ?>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fas fa-ban"></i> Cancelar</button>
+                <button type="button" id="btnGuardarp" name="btnGuardarp" class="btn btn-success" value="btnGuardarp"><i class="far fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <!-- /.content -->
 </div>
@@ -199,7 +319,7 @@ $message = "";
 
 
     var salesGraphChartData = {
-      labels: [<?php foreach ($datag as $d) : ?> "<?php echo $d['mes'].' '.$d['año'] ?>",
+      labels: [<?php foreach ($datag as $d) : ?> "<?php echo $d['mes'] . ' ' . $d['año'] ?>",
         <?php endforeach; ?>
       ],
       datasets: [{

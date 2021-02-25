@@ -34,7 +34,7 @@ $(document).ready(function() {
         "columnDefs": [{
             "targets": -1,
             "data": null,
-            "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-sm btn-primary  btnEditar'><i class='fas fa-search'></i></button><button class='btn btn-sm btn-danger btnBorrar'><i class='fas fa-trash-alt'></i></button></div></div>"
+            "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-sm btn-primary btnEditar'><i class='fas fa-search'></i></button><button class='btn btn-sm btn-success btnPagar'><i class='fas fa-hand-holding-usd'></i></button><button class='btn btn-sm btn-danger btnBorrar'><i class='fas fa-trash-alt'></i></button></div></div>"
         }, {
             "render": function(data, type, row) {
                 return commaSeparateNumber(data);
@@ -126,6 +126,23 @@ $(document).ready(function() {
 
 
 
+    $(document).on("click", ".btnPagar", function() {
+        fila = $(this).closest("tr");
+        id = parseInt(fila.find('td:eq(0)').text());
+        saldo = fila.find('td:eq(5)').text();
+
+        $("#formPago").trigger("reset");
+        $("#folio_cxp").val(id);
+        $("#saldo").val(saldo);
+        opcion = 1;
+        $(".modal-header").css("background-color", "#28a745");
+        $(".modal-header").css("color", "white");
+        $("#modalPago").modal("show");
+
+
+    });
+
+
     //botón BORRAR
     $(document).on("click", ".btnBorrar", function() {
         fila = $(this);
@@ -189,6 +206,131 @@ $(document).ready(function() {
             return b - a;
         }
     });
+
+
+    $(document).on("click", "#btnGuardarp", function() {
+        var folio_cxp = $("#folio_cxp").val();
+        var fecha = $("#fecha").val();
+        var nota = $("#notapago").val();
+        var cuenta = $("#cuenta").val();
+        var saldofin = 0;
+        var monto = $("#montopago").val();
+        var metodo = $("#metodo").val();
+        var usuario = $("#nameuser").val();
+
+        if (folio_cxp.length == 0 || fecha.length == 0 || cuenta.length == 0 || monto.length == 0 || metodo.length == 0 || usuario.length == 0) {
+            swal.fire({
+                title: "Datos Incompletos",
+                text: "Verifique sus datos",
+                icon: "warning",
+                focusConfirm: true,
+                confirmButtonText: "Aceptar",
+            });
+        } else {
+
+            $.ajax({
+                url: "bd/buscarsaldocxp.php",
+                type: "POST",
+                dataType: "json",
+                async: false,
+                data: {
+                    folio_cxp: folio_cxp,
+                },
+                success: function(res) {
+                    saldo = res;
+
+                },
+            });
+
+
+            if (parseFloat(saldo) < parseFloat(monto)) {
+                swal.fire({
+                    title: "Pago Excede el Saldo",
+                    text: "El pago no puede exceder el sado de la cuenta, Verifique el monto del Pago",
+                    icon: "warning",
+                    focusConfirm: true,
+                    confirmButtonText: "Aceptar",
+                });
+                $("#saldo").val(saldo);
+
+            } else {
+                saldofin = saldo - monto;
+                opcion = 1;
+                $.ajax({
+                    url: "bd/pagocxp.php",
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    data: {
+                        folio_cxp: folio_cxp,
+                        fecha: fecha,
+                        nota: nota,
+                        cuenta: cuenta,
+                        saldo: saldo,
+                        monto: monto,
+                        saldofin: saldofin,
+                        metodo: metodo,
+                        usuario: usuario,
+                        opcion: opcion,
+                    },
+                    success: function(res) {
+                        if (res == 1) {
+                            buscartotal();
+                            $("#modalPago").modal("hide");
+                        } else {
+                            swal.fire({
+                                title: "Error",
+                                text: "La operacion no puedo completarse",
+                                icon: "warning",
+                                focusConfirm: true,
+                                confirmButtonText: "Aceptar",
+                            });
+                        }
+
+                    },
+                });
+
+            }
+
+        }
+
+
+
+    });
+
+
+
+    function mensajepago() {
+        swal.fire({
+            title: "Pago Guardado",
+            icon: "success",
+            focusConfirm: true,
+            confirmButtonText: "Aceptar",
+        });
+
+        window.setTimeout(function() {
+            location.reload();
+        }, 2500);
+
+    }
+
+    function buscartotal() {
+        folio = $('#folio_cxp').val();
+        monto = $('#montopago').val();
+        $.ajax({
+            type: "POST",
+            url: "bd/actualizarsaldocxp.php",
+            dataType: "json",
+            data: { folio: folio, monto: monto },
+            success: function(res) {
+
+                $("#saldo").val(res[0].saldo);
+                mensajepago();
+
+            }
+        });
+
+    }
 
 
 
