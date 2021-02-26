@@ -141,7 +141,36 @@
         </li>
 
 
+        <?php if ($_SESSION['s_rol'] == '3') {
+        ?>
+          <li class="nav-item has-treeview <?php echo ($pagina == 'resumencxp' ) ? "menu-open" : ""; ?>">
 
+
+            <a href="#" class="nav-link <?php echo ($pagina == 'resumencxp' ) ? "active" : ""; ?>">
+              <span class="fa-stack">
+                <i class="fas fa-chart-line nav-icon"></i>
+
+              </span>
+              <p>
+                Reportes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="resumencxp.php" class="nav-link <?php echo ($pagina == 'resumencxp') ? "active seleccionado" : ""; ?>  ">
+                  <i class="fas fa-file-invoice nav-icon"></i>
+                  <p>Resumen Egresos</p>
+                </a>
+              </li>
+
+
+            </ul>
+          </li>
+        <?php
+        }
+        ?>
 
 
 
