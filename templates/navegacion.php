@@ -107,6 +107,34 @@
           </ul>
         </li>
 
+        <li class="nav-item has-treeview <?php echo ($pagina == 'proyectos'  ) ? "menu-open" : ""; ?>">
+
+
+          <a href="#" class="nav-link <?php echo ($pagina == 'proyectos' ) ? "active" : ""; ?>">
+          <span class="fa-stack">
+              <i class="nav-icon fas fa-laptop-code "></i>
+            </span>
+            <p>
+              SISTEMAS
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+
+            <li class="nav-item">
+              <a href="cntaproyecto.php" class="nav-link <?php echo ($pagina == 'proyectos') ? "active seleccionado" : ""; ?>  ">
+                <i class="fas fa-project-diagram nav-icon"></i>
+                <p>Proyectos</p>
+              </a>
+            </li>
+
+       
+
+         
+
+          </ul>
+        </li>
+
         <li class="nav-item has-treeview <?php echo ($pagina == 'cuentas' || $pagina == 'caja' ) ? "menu-open" : ""; ?>">
 
 
