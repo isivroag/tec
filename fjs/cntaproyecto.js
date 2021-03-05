@@ -8,7 +8,7 @@ $(document).ready(function () {
         targets: -1,
         data: null,
         defaultContent:
-          "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-orange btnbitacora' data-toggle='tooltip' data-placement='top' title='Bitacora'><i class=' text-light fas fa-list'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-trash-alt'></i></button></div>",
+          "<div class='text-center'><button class='btn btn-sm btn-primary  btnEditar' data-toggle='tooltip' data-placement='top' title='Editar'><i class='fas fa-edit'></i></button><button class='btn btn-sm bg-orange btnbitacora' data-toggle='tooltip' data-placement='top' title='Bitacora'><i class=' text-light fas fa-list'></i></button><button class='btn btn-sm bg-success btnVerbitacora' data-toggle='tooltip' data-placement='top' title='Ver Bitacora'><i class=' text-light fas fa-clock'></i></button><button class='btn btn-sm btn-danger btnBorrar' data-toggle='tooltip' data-placement='top' title='Borrar'><i class='fas fa-trash-alt'></i></button></div>",
       },
     ],
 
@@ -42,6 +42,16 @@ $(document).ready(function () {
     id = null
     opcion = 1 //alta
   })
+
+  
+  $(document).on('click', '.btnVerbitacora', function () {
+  
+    fila = $(this).closest('tr')
+    id = parseInt(fila.find('td:eq(0)').text())
+    window.location.href = "detallebitacora.php?id="+id;
+    
+  })
+
 
   $(document).on('click', '.btnbitacora', function () {
     $('#formBitacora').trigger('reset')
