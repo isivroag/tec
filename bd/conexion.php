@@ -6,7 +6,7 @@
             define('servidor','tecniem.com');
             define('bd_nombre','tecniemc_tecniem');
             define('usuario','tecniemc_ivan');
-            define('password','Sistemas.2021');
+            define('password','66obispo.colima');
 
             $opciones=array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
 
